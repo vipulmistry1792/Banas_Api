@@ -11,6 +11,7 @@ router.post('/usedEnergy', UsedEnergy);
 router.post('/currentmonthdata', currentmonthdata);
 router.post('/dghistory', dghistory);
 router.post('/dgcon', dgConsumption);
+router.post('/dgstatus', dgstatus);
 module.exports = router;
 function meterhistory(req, res, next) {
     meterData.meterhistory(req.body)
@@ -59,6 +60,11 @@ function dghistory(req, res, next) {
 }
 function dgConsumption(req, res, next) {
     meterData.Dgconsumption(req.body)
+        .then((result) => res.json(result))
+        .catch(err => next(err));
+}
+function dgstatus(req, res, next) {
+    meterData.DgStatus(req.body)
         .then((result) => res.json(result))
         .catch(err => next(err));
 }

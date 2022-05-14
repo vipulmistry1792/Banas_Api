@@ -14,7 +14,8 @@ module.exports = {
     ConsumptionEnergy,
     ThisMonthData,
     dghistory,
-    Dgconsumption
+    Dgconsumption,
+    DgStatus
 
 };
 async function meterhistory(emname){
@@ -133,3 +134,16 @@ console.log(`${startdate} == ${enddate}`)
                 const data = helper.emptyOrRows(rows);      
                 return data;
                 }
+                async function DgStatus(emname){
+    
+                  let emn=emname.machineno;
+                  //console.log(emn)
+                  let startdate=emname.start_date;
+                  let enddate=emname.end_date;
+                  let table_name=emname.machineno+'_energy';
+
+                  const rows = await db(`select a.dg_name as DGName,CASE WHEN a.dg_status = 1 THEN 'ON' ELSE 'OFF' END as Status,a.dateTime as TimeStamp,LEAD(a.dateTime,1) OVER (ORDER BY a.dateTime asc)  as EndTime,datediff(minute,a.dateTime,LEAD(a.dateTime,1) OVER (ORDER BY a.dateTime asc)) as Duration from dg_status as a where  (a.dateTime BETWEEN '${startdate}' AND '${enddate}') and a.dg_name='${emn}'`);
+                  const data = helper.emptyOrRows(rows); 
+                  console.log(data)     
+                  return data;
+                  }
